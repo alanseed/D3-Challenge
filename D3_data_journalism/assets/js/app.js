@@ -1,2 +1,90 @@
-var inputData = [] ;
+var inputData = [];
 
+var margin = { top: 10, right: 30, bottom: 30, left: 60 },
+  width = 460 - margin.left - margin.right,
+  height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3
+  .select("#scatter")
+  .append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+//Read the data
+d3.csv(
+  "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/2_TwoNum.csv",
+  function (data) {
+    // Add X axis
+    var x = d3.scaleLinear().domain([0, 4000]).range([0, width]);
+    svg
+      .append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+    // Add Y axis
+    var y = d3.scaleLinear().domain([0, 500000]).range([height, 0]);
+    svg.append("g").call(d3.axisLeft(y));
+
+    // Add dots
+    svg
+      .append("g")
+      .selectAll("dot")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("cx", function (d) {
+        return x(d.GrLivArea);
+      })
+      .attr("cy", function (d) {
+        return y(d.SalePrice);
+      })
+      .attr("r", 10)
+      .style("fill", "#000000");
+      // .attr("r", 1.5)
+      // .style("fill", "#69b3a2");
+  }
+);
+
+// // read in the data and copy it to the global data variable
+// d3.csv("assets/data/data.csv").then(function (thisData) {
+//   inputData = thisData;
+//   console.log(Object.keys(inputData[0]));
+//   poverty = inputData.map((p) => +p.poverty);
+//   health = inputData.map((p) => +p.healthcareLow);
+//   console.log(health);
+//   console.log(poverty);
+// // set the x and y axis
+// var yLinearScale = d3
+//   .scaleLinear()
+//   .range([chartHeight, 0])
+//   .domain([0, 20]);
+// svg.append("g").call(d3.axisLeft(yLinearScale));
+
+// var xLinearScale = d3
+//   .scaleLinear()
+//   .range([0,chartWidth])
+//   .domain([0, 20]);
+// svg
+//   .append("g")
+//   .attr("transform", "translate(0," + chartHeight + ")")
+//   .call(d3.axisBottom(xLinearScale));
+
+// // Add dots
+// svg
+//   .append("g")
+//   .selectAll("dot")
+//   .data(inputData)
+//   .enter()
+//   .append("circle")
+//   .attr("cx", function (d) {
+//     return xLinearScale(poverty);
+//   })
+//   .attr("cy", function (d) {
+//     return yLinearScale(health);
+//   })
+//   .attr("r", 1.5)
+//   .style("fill", "#69b3a2");
+// });
