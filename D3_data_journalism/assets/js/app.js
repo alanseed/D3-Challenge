@@ -18,21 +18,21 @@ d3.csv("assets/data/data.csv").then(function (thisData) {
   
 // Add X axis
 var x = d3.scaleLinear()
-.domain([0, 24])
+.domain([0, 30])
 .range([ 0, width ]);
 
 Svg.append("g")
 .attr("transform", "translate(0," + height + ")")
-.call(d3.axisBottom(x).tickSize(-height*1.3).ticks(12))
+.call(d3.axisBottom(x).tickSize(-height*1.3).ticks(15))
 .select(".domain").remove()
 
 // Add Y axis
 var y = d3.scaleLinear()
-.domain([0, 24])
+.domain([0, 30])
 .range([ height, 0])
 .nice()
 Svg.append("g")
-.call(d3.axisLeft(y).tickSize(-width*1.3).ticks(12))
+.call(d3.axisLeft(y).tickSize(-width*1.3).ticks(15))
 .select(".domain").remove()
 
 // Customization
@@ -43,8 +43,8 @@ Svg.append("text")
   .attr("text-anchor", "middle")
   .attr("x", width/2)
   .attr("y", height + margin.top + 25)
-  .style("font-size", "25px")
-  .text("Health Care");
+  .style("font-size", "20px")
+  .text("In Poverty (%)");
 
 // Y axis label:
 Svg.append("text")
@@ -52,8 +52,8 @@ Svg.append("text")
   .attr("transform", "rotate(-90)")
   .attr("y", -margin.left+20)
   .attr("x", -(height+margin.top)/2)
-  .style("font-size", "25px")
-  .text("Poverty")
+  .style("font-size", "20px")
+  .text("Lacks Healthcare (%)")
 
   // Add dots
   Svg
@@ -63,11 +63,11 @@ Svg.append("text")
     .enter()
     .append("circle")
     .attr("cx", function (d) {
-      return x(d.healthcareLow);
+      return x(d.poverty);
     })
     .attr("cy", function (d) {
-      return y(d.poverty);
+      return y(d.healthcareLow);
     })
-    .attr("r", 2.5)
+    .attr("r", 7.5)
     .style("fill", "#69b3a2");
 });
