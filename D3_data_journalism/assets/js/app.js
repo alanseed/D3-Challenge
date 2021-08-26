@@ -1,90 +1,73 @@
 var inputData = [];
-
-var margin = { top: 10, right: 30, bottom: 30, left: 60 },
-  width = 460 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+var margin = {top: 10, right: 30, bottom: 60, left: 60},
+    width = 490 - margin.left - margin.right,
+    height = 470 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-var svg = d3
-  .select("#scatter")
+var Svg = d3.select("#scatter")
   .append("svg")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
   .append("g")
-  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 
 //Read the data
-d3.csv(
-  "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/2_TwoNum.csv",
-  function (data) {
-    // Add X axis
-    var x = d3.scaleLinear().domain([0, 4000]).range([0, width]);
-    svg
-      .append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+// read in the data and make the plot
+d3.csv("assets/data/data.csv").then(function (thisData) {
+  
+// Add X axis
+var x = d3.scaleLinear()
+.domain([0, 24])
+.range([ 0, width ]);
 
-    // Add Y axis
-    var y = d3.scaleLinear().domain([0, 500000]).range([height, 0]);
-    svg.append("g").call(d3.axisLeft(y));
+Svg.append("g")
+.attr("transform", "translate(0," + height + ")")
+.call(d3.axisBottom(x).tickSize(-height*1.3).ticks(12))
+.select(".domain").remove()
 
-    // Add dots
-    svg
-      .append("g")
-      .selectAll("dot")
-      .data(data)
-      .enter()
-      .append("circle")
-      .attr("cx", function (d) {
-        return x(d.GrLivArea);
-      })
-      .attr("cy", function (d) {
-        return y(d.SalePrice);
-      })
-      .attr("r", 10)
-      .style("fill", "#000000");
-      // .attr("r", 1.5)
-      // .style("fill", "#69b3a2");
-  }
-);
+// Add Y axis
+var y = d3.scaleLinear()
+.domain([0, 24])
+.range([ height, 0])
+.nice()
+Svg.append("g")
+.call(d3.axisLeft(y).tickSize(-width*1.3).ticks(12))
+.select(".domain").remove()
 
-// // read in the data and copy it to the global data variable
-// d3.csv("assets/data/data.csv").then(function (thisData) {
-//   inputData = thisData;
-//   console.log(Object.keys(inputData[0]));
-//   poverty = inputData.map((p) => +p.poverty);
-//   health = inputData.map((p) => +p.healthcareLow);
-//   console.log(health);
-//   console.log(poverty);
-// // set the x and y axis
-// var yLinearScale = d3
-//   .scaleLinear()
-//   .range([chartHeight, 0])
-//   .domain([0, 20]);
-// svg.append("g").call(d3.axisLeft(yLinearScale));
+// Customization
+Svg.selectAll(".tick line").attr("stroke", "#EBEBEB")
 
-// var xLinearScale = d3
-//   .scaleLinear()
-//   .range([0,chartWidth])
-//   .domain([0, 20]);
-// svg
-//   .append("g")
-//   .attr("transform", "translate(0," + chartHeight + ")")
-//   .call(d3.axisBottom(xLinearScale));
+// Add X axis label:
+Svg.append("text")
+  .attr("text-anchor", "middle")
+  .attr("x", width/2)
+  .attr("y", height + margin.top + 25)
+  .style("font-size", "25px")
+  .text("Health Care");
 
-// // Add dots
-// svg
-//   .append("g")
-//   .selectAll("dot")
-//   .data(inputData)
-//   .enter()
-//   .append("circle")
-//   .attr("cx", function (d) {
-//     return xLinearScale(poverty);
-//   })
-//   .attr("cy", function (d) {
-//     return yLinearScale(health);
-//   })
-//   .attr("r", 1.5)
-//   .style("fill", "#69b3a2");
-// });
+// Y axis label:
+Svg.append("text")
+  .attr("text-anchor", "middle")
+  .attr("transform", "rotate(-90)")
+  .attr("y", -margin.left+20)
+  .attr("x", -(height+margin.top)/2)
+  .style("font-size", "25px")
+  .text("Poverty")
+
+  // Add dots
+  Svg
+    .append("g")
+    .selectAll("dot")
+    .data(thisData)
+    .enter()
+    .append("circle")
+    .attr("cx", function (d) {
+      return x(d.healthcareLow);
+    })
+    .attr("cy", function (d) {
+      return y(d.poverty);
+    })
+    .attr("r", 2.5)
+    .style("fill", "#69b3a2");
+});
