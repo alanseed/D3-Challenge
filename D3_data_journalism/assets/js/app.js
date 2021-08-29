@@ -1,7 +1,7 @@
 var inputData = [];
-var margin = {top: 10, right: 30, bottom: 60, left: 60},
-    width = 490 - margin.left - margin.right,
-    height = 470 - margin.top - margin.bottom;
+var margin = {top: 10, right: 30, bottom: 60, left: 40},
+    width = 500 - margin.left - margin.right,
+    height = 480 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var Svg = d3.select("#scatter")
@@ -18,7 +18,7 @@ d3.csv("assets/data/data.csv").then(function (thisData) {
   
   // Add X axis
   var x = d3.scaleLinear()
-  .domain([0, 30])
+  .domain([0, 24])
   .range([ 0, width ]);
 
   Svg.append("g")
@@ -28,7 +28,7 @@ d3.csv("assets/data/data.csv").then(function (thisData) {
 
   // Add Y axis
   var y = d3.scaleLinear()
-  .domain([0, 30])
+  .domain([0, 24])
   .range([ height, 0])
   .nice()
   Svg.append("g")
