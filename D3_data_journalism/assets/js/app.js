@@ -16,58 +16,83 @@ var Svg = d3.select("#scatter")
 // read in the data and make the plot
 d3.csv("assets/data/data.csv").then(function (thisData) {
   
-// Add X axis
-var x = d3.scaleLinear()
-.domain([0, 30])
-.range([ 0, width ]);
+  // Add X axis
+  var x = d3.scaleLinear()
+  .domain([0, 30])
+  .range([ 0, width ]);
 
-Svg.append("g")
-.attr("transform", "translate(0," + height + ")")
-.call(d3.axisBottom(x).tickSize(-height*1.3).ticks(15))
-.select(".domain").remove()
+  Svg.append("g")
+  .attr("transform", "translate(0," + height + ")")
+  .call(d3.axisBottom(x).tickSize(-height*1.3).ticks(15))
+  .select(".domain").remove()
 
-// Add Y axis
-var y = d3.scaleLinear()
-.domain([0, 30])
-.range([ height, 0])
-.nice()
-Svg.append("g")
-.call(d3.axisLeft(y).tickSize(-width*1.3).ticks(15))
-.select(".domain").remove()
+  // Add Y axis
+  var y = d3.scaleLinear()
+  .domain([0, 30])
+  .range([ height, 0])
+  .nice()
+  Svg.append("g")
+  .call(d3.axisLeft(y).tickSize(-width*1.3).ticks(15))
+  .select(".domain").remove()
 
-// Customization
-Svg.selectAll(".tick line").attr("stroke", "#EBEBEB")
+  // Customization
+  Svg.selectAll(".tick line").attr("stroke", "#EBEBEB")
 
-// Add X axis label:
-Svg.append("text")
-  .attr("text-anchor", "middle")
-  .attr("x", width/2)
-  .attr("y", height + margin.top + 25)
-  .style("font-size", "20px")
-  .text("In Poverty (%)");
+  // Add X axis label:
+  Svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("x", width/2)
+    .attr("y", height + margin.top + 25)
+    .style("font-size", "20px")
+    .text("In Poverty (%)");
 
-// Y axis label:
-Svg.append("text")
-  .attr("text-anchor", "middle")
-  .attr("transform", "rotate(-90)")
-  .attr("y", -margin.left+20)
-  .attr("x", -(height+margin.top)/2)
-  .style("font-size", "20px")
-  .text("Lacks Healthcare (%)")
+  // Y axis label:
+  Svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -margin.left+20)
+    .attr("x", -(height+margin.top)/2)
+    .style("font-size", "20px")
+    .text("Lacks Healthcare (%)");
 
-  // Add dots
-  Svg
-    .append("g")
-    .selectAll("dot")
-    .data(thisData)
-    .enter()
-    .append("circle")
-    .attr("cx", function (d) {
-      return x(d.poverty);
-    })
-    .attr("cy", function (d) {
-      return y(d.healthcareLow);
-    })
-    .attr("r", 7.5)
-    .style("fill", "#69b3a2");
-});
+    // // Add dots
+    Svg
+      .append("g")
+      .selectAll("dot")
+      .data(thisData)
+      .enter()
+      .append("circle")
+      .attr("cx", function (d) {
+        return x(d.poverty);
+      })
+      .attr("cy", function (d) {
+        return y(d.healthcareLow);
+      })
+      .attr("r", 10)
+      .style("fill", "#69b3a2");
+    
+    // Add labels
+    Svg
+      .append("g")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 10)
+      .selectAll("label")
+      .data(thisData)
+      .enter()
+      .append("text")
+      .text(function(d){
+        return d.abbr;
+      })
+      .attr("x", function (d) {
+        return x(d.poverty);
+      })
+      .attr("y", function (d) {
+        return y(d.healthcareLow);
+      })
+      .attr("text-anchor","middle") 
+      .attr("dy", "0.35em")
+    });
+
+
+
+
